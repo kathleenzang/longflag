@@ -8,7 +8,7 @@ Authors@R: c(
       email = "kathleen.zang@mail.utoronto.ca",
       role = c("aut", "cre")
     ),
-    person("Isha", "Sharma", email = "ii.sharma@mail.utoronto.ca", role = "aut")
+    person("Isha", "Sharma", email = "mail.isha24@gmail.com", role = "aut")
   )
 Description: longflag() identifies changes in a repeated-measures dataset based on selected methods. The function takes a long-format dataset and evaluates whether a meaningful change has occurred using one of three approaches.
 License: MIT + file LICENSE
