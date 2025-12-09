@@ -44,7 +44,7 @@
 #'
 #' @export
 #'
-#' @importFrom dplyr %>% group_by summarise mutate arrange lag ungroup
+#' @importFrom dplyr %>% group_by summarise mutate arrange lag ungroup first last lead
 #' @importFrom stats quantile
 #'
 #' @examples
