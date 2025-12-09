@@ -141,13 +141,14 @@ This dataset is used in the vignette to demonstrate longflag() in more depth.
 ## References
 Wickham H, Bryan J (2023). R Packages (2nd ed.)
 
-## Vignette
 
-For a more detailed, step-by-step tutorial, see the vignette:
+## Vignette (HTML)
 
-```r
-vignette("longflag", package = "longflag")
-```
+For a more detailed, step-by-step tutorial, see the vignette.
+
+A rendered HTML version of the vignette is available here:  
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/kathleenzang/longflag/refs/heads/main/vignettes/longflag.html
+
 
 ## Credits
 
