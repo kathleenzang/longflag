@@ -1,0 +1,270 @@
+---
+title: "Getting started with longflag"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{longflag}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(longflag)
+library(dplyr)
+```
+
+## Introduction
+
+longflag is an R package for identifying meaningful changes over time in repeated-measures (longitudinal) data. It takes a long-format dataset and evaluates whether a meaningful change has occurred within subjects using one of three user-selected approaches.
+
+This vignette provides a short, end-to-end example of how to:
+
+ - prepare your data for use with longflag();
+
+ - apply the three available methods; and
+
+ - interpret the resulting output and flags.
+
+If the user have not yet installed the package, they can do so with:
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+# library(devtools)
+# devtools::install_github("kathleenzang/longflag")
+
+library(longflag)
+```
+
+## The problem: meaningful change in longitudinal data
+
+In many longitudinal studies we measure the same variable repeatedly for each subject (e.g., test scores, lab values, symptom scales). Often we want to know:
+
+ - Which subjects improved or deteriorated by at least a certain amount?
+
+ - Between which timepoints did large changes occur?
+
+ - How do different definitions of “change” compare?
+
+longflag() helps answer these questions by:
+
+ - allowing the user to specify a numeric threshold for what you consider meaningful;
+
+ - offering three different ways to compute change; and
+
+ - returning a tidy tibble with a logical flagged variable.
+
+## Data requirements
+
+longflag() expects data in long format, with one row per subject per timepoint.
+
+The user must provide the names (as character strings) of three variables:
+
+ - id – subject identifier
+
+ - time – ordered timepoints (numeric or coercible to numeric)
+
+ - value – numeric outcome to evaluate
+
+Internally, longflag():
+
+ 1. selects these three columns from data;
+
+ 2. renames them to ID, Time, and Value;
+
+ 3. coerces Time and Value to numeric; and
+
+ 4. orders the data by ID and Time.
+
+## The longflag() methods
+
+The main function has the form:
+
+```{r, eval = FALSE}
+longflag(
+  data,
+  id,
+  time,
+  value,
+  threshold,
+  method = c("first_last", "mean_change", "all_timepoints")
+)
+```
+
+The threshold argument defines what size of change is considered meaningful; a record is flagged when abs(change) >= threshold.
+
+The method argument controls how change is defined:
+
+ - "first_last" – difference between the first and last observed values per subject.
+
+ - "mean_change" – mean of stepwise changes between consecutive timepoints per subject.
+
+ - "all_timepoints" – change between each pair of consecutive timepoints.
+
+Each method is illustrated below using the included example dataset.
+
+## Example dataset
+
+The package ships with dataset_ex, an artificial dataset with repeated measurements for several subjects.
+
+```{r}
+data("dataset_ex")
+head(dataset_ex)
+```
+
+We can quickly summarise how many timepoints each subject has:
+
+```{r}
+dataset_ex %>%
+group_by(Person) %>%
+summarise(
+n_time   = n(),
+min_time = min(Time),
+max_time = max(Time),
+.groups  = "drop"
+)
+```
+
+In this vignette we will treat:
+
+ - Person as the subject ID,
+
+ - Time as the time variable, and
+
+ - Score as the numeric outcome.
+ 
+## Method 1: first and last values
+
+With method = "first_last", change is defined as:
+
+```{r, eval = FALSE}
+change = last(Value) - first(Value)
+```
+
+for each subject.
+
+```{r}
+first_last_res <- longflag(
+data      = dataset_ex,
+id        = "Person",
+time      = "Time",
+value     = "Score",
+threshold = 3,
+method    = "first_last"
+)
+
+first_last_res
+```
+
+The output has one row per subject with:
+
+ - ID – subject identifier
+
+ - first_value and last_value
+
+ - change – last minus first
+
+ - flagged – TRUE if |change| >= threshold
+
+We can easily list only those subjects who exhibit a large change:
+
+```{r}
+first_last_res %>%
+filter(flagged)
+```
+
+The user can adjust the threshold to be more or less stringent. For instance, to see the distribution of absolute changes and choose a quantile-based cutoff:
+
+```{r}
+quantile(abs(first_last_res$change), probs = c(0.5, 0.75, 0.9, 0.95))
+```
+
+## Method 2: mean stepwise change
+
+With method = "mean_change", longflag() considers all consecutive pairs of timepoints, computes the change at each step, then takes the average for each subject:
+
+```{r, eval = FALSE}
+change_i = mean( Value_{t+1} - Value_t )
+```
+
+```{r}
+mean_change_res <- longflag(
+data      = dataset_ex,
+id        = "Person",
+time      = "Time",
+value     = "Score",
+threshold = 2,
+method    = "mean_change"
+)
+
+mean_change_res
+```
+
+Here, change is the mean stepwise change and flagged indicates whether its magnitude exceeds the chosen threshold.
+
+This method is useful when the user cares about the average trajectory rather than just the net change between the first and last measurements.
+
+## Method 3: all consecutive timepoints
+
+With method = "all_timepoints", longflag() returns one row per pair of consecutive timepoints for each subject:
+
+```{r}
+all_tp_res <- longflag(
+data      = dataset_ex,
+id        = "Person",
+time      = "Time",
+value     = "Score",
+threshold = 4,
+method    = "all_timepoints"
+)
+
+head(all_tp_res, 10)
+```
+
+The columns are:
+
+ - ID – subject identifier
+
+ - from_time – starting timepoint
+
+ - to_time – following timepoint
+
+ - change – Value(to_time) - Value(from_time)
+
+ - flagged – TRUE if |change| >= threshold
+
+This method is helpful when the user wants to pinpoint exactly when large changes occur. For example, to list only flagged intervals:
+
+```{r}
+all_tp_res %>%
+filter(flagged) %>%
+arrange(ID, from_time)
+```
+
+## Choosing a method
+
+Which method the user uses depends on their scientific question:
+
+ - Use "first_last" when the user is interested in the overall change from baseline (or first observation) to the last available measurement.
+
+ - Use "mean_change" when the user wants a summary of the average rate of change over time.
+
+ - Use "all_timepoints" when the user needs to know at which specific intervals substantial changes occurred.
+
+In practice, the user might try multiple methods to understand how sensitive their conclusions are to the definition of change.
+
+
+## Further work
+
+This vignette has focused on the basic use of longflag(). In the user's own analyses, they might:
+ - Combine longflag() results with additional subject-level information (e.g., treatment group, demographics);
+ - Use different thresholds for increases and decreases, by post-processing the change column; or
+ - Wrap longflag() calls in their own functions tailored to their study.
+
+We encourage users to explore the function help (?longflag) and adapt the examples shown here to their own longitudinal data.
+
