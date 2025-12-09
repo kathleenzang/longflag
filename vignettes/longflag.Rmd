@@ -1,4 +1,4 @@
----
+-----
 title: "Getting started with longflag"
 output: rmarkdown::html_vignette
 vignette: >
