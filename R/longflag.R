@@ -1,49 +1,46 @@
 #' Flag meaningful changes across repeated timepoints within subjects
 #'
-#' `longflag()` identifies changes in a repeated-measures dataset based on
+#' \code{longflag()} identifies changes in a repeated-measures dataset based on
 #' selected methods. The function takes a long-format dataset and evaluates
-#' whether meaningful change has occurred using one of three approaches:
+#' whether a meaningful change has occurred using one of three approaches.
 #'
-#' * `"first_last"` – change = last value – first value
-#' * `"mean_change"` – change = mean(value) – first value
-#' * `"all_timepoints"` – returns a row-wise change between consecutive timepoints
 #'
 #' @param data A long-format data frame or tibble containing repeated observations.
 #' @param id A string supplying the column name representing unique subject IDs.
 #' @param time A string supplying the column name representing the ordered timepoints.
 #' @param value A string supplying the column name of the numeric variable to evaluate.
-#' @param threshold Numeric cutoff defining what magnitude of change should be flagged.
-#' @param method One of `"first_last"`, `"mean_change"`, or `"all_timepoints"`.
+#' @param threshold User-defined numeric cutoff defining what magnitude of change should be flagged.
+#' @param method One of \code{first_last}, \code{mean_change}, or \code{all_timepoints}.
 #'   Determines how change is calculated. See details.
 #'
 #' @details
-#' The change logic depends on the chosen method:
 #'
-#' **Method `"first_last"`**
-#' Produces one row per subject. Change is defined as:
-#' \deqn{change = last(value) - first(value)}
+#' The meaningful change logic depends on the chosen method:
 #'
-#' **Method `"mean_change"`**
-#' Produces one row per subject. Change is defined as:
-#' \deqn{change = mean(value) - first(value)}
+#' \itemize{
+#'   \item \code{first_last}: Change is defined as:
+#' \deqn{change = \text{last(value)} - \text{first(value)}}
+#'   \item \code{mean_change}: Mean of all stepwise changes.
+#'   \item \code{all_timepoints}: Returns a row-wise change between consecutive timepoints.}
 #'
-#' **Method `"all_timepoints"`**
-#' Produces multiple rows per subject, comparing each timepoint to the previous one.
-#' For the first timepoint, no previous comparison exists, so `NA` is returned by design.
 #'
-#' A subject or timepoint pair is flagged when the magnitude of change meets or exceeds
-#' `threshold`.
+#' A subject or timepoint pair is flagged when the magnitude of change meets or exceeds a user-defined \code{threshold}.
 #'
 #' @returns
 #' A tibble summarizing observed changes:
 #'
-#' If `method = "first_last"` or `"mean_change"`:
-#'   * one row per subject
-#'   * columns: ID, change, flagged (plus method-specific summary columns)
+#' If \code{method = first_last} or \code{mean_change}:
+#' \itemize{
+#' \item One row per subject.
+#' \item Columns: \code{ID}, \code{change}, \code{flagged} (plus method-specific summary columns).
+#' \item Column \code{flagged} being a logical indicator corresponding to the user-defined threshold.}
 #'
-#' If `method = "all_timepoints"`:
-#'   * one row per subject-time comparison
-#'   * columns: ID, from_time, to_time, change, flagged
+#' If \code{method = all_timepoints}:
+#' \itemize{
+#' \item One row per subject-time comparison.
+#' \item Produces multiple rows per subject, comparing each timepoint to the previous one.
+#' \item For the first timepoint, no previous comparison exists, so \code{NA} is returned by design.
+#' \item Columns: \code{ID}, \code{from_time}, \code{to_time}, \code{change}, \code{flagged}}
 #'
 #' @export
 #'
@@ -68,7 +65,7 @@
 #'   method = "first_last"
 #' )
 #'
-#' ## Example 2: Compare mean value to first value
+#' ## Example 2: Compare mean of consecutive stepwise changes
 #' longflag(
 #'   data = test_data,
 #'   id = "Person",
@@ -93,25 +90,22 @@ longflag <- function(data, id, time, value, threshold,
 
   method <- match.arg(method)
 
-  library(dplyr)
-
   df <- data[, c(id, time, value)]
   colnames(df) <- c("ID", "Time", "Value")
 
   df <- df %>%
-    mutate(
-      ID = as.integer(ID),
+    dplyr::mutate(
       Time = as.numeric(Time),
       Value = as.numeric(Value)
     ) %>%
-    arrange(ID, Time)
+    dplyr::arrange(ID, Time)
 
 
   if (method == "first_last") {
     return(
       df %>%
-        group_by(ID) %>%
-        summarise(
+        dplyr::group_by(ID) %>%
+        dplyr::summarise(
           first_value = first(Value),
           last_value = last(Value),
           change = last_value - first_value,
@@ -124,10 +118,10 @@ longflag <- function(data, id, time, value, threshold,
   if (method == "mean_change") {
     return(
       df %>%
-        group_by(ID) %>%
-        mutate(step_change = Value - lag(Value)) %>%
-        filter(!is.na(step_change)) %>%
-        summarise(
+        dplyr::group_by(ID) %>%
+        dplyr::mutate(step_change = Value - lag(Value)) %>%
+        dplyr::filter(!is.na(step_change)) %>%
+        dplyr::summarise(
           change = mean(step_change),
           flagged = abs(change) >= threshold,
           .groups = "drop"
@@ -138,15 +132,15 @@ longflag <- function(data, id, time, value, threshold,
   if (method == "all_timepoints") {
     return(
       df %>%
-        group_by(ID) %>%
-        mutate(
+        dplyr::group_by(ID) %>%
+        dplyr::mutate(
           from_time = Time,
           to_time   = lead(Time),
           change    = lead(Value) - Value
         ) %>%
-        filter(!is.na(change)) %>%
-        mutate(flagged = abs(change) >= threshold) %>%
-        select(ID, from_time, to_time, change, flagged)
+        dplyr::filter(!is.na(change)) %>%
+        dplyr::mutate(flagged = abs(change) >= threshold) %>%
+        dplyr::select(ID, from_time, to_time, change, flagged)
     )
   }
 }

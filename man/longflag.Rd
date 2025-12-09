@@ -22,49 +22,43 @@ longflag(
 
 \item{value}{A string supplying the column name of the numeric variable to evaluate.}
 
-\item{threshold}{Numeric cutoff defining what magnitude of change should be flagged.}
+\item{threshold}{User-defined numeric cutoff defining what magnitude of change should be flagged.}
 
-\item{method}{One of `"first_last"`, `"mean_change"`, or `"all_timepoints"`.
+\item{method}{One of \code{first_last}, \code{mean_change}, or \code{all_timepoints}.
 Determines how change is calculated. See details.}
 }
 \value{
 A tibble summarizing observed changes:
 
-If `method = "first_last"` or `"mean_change"`:
-  * one row per subject
-  * columns: ID, change, flagged (plus method-specific summary columns)
+If \code{method = first_last} or \code{mean_change}:
+\itemize{
+\item One row per subject.
+\item Columns: \code{ID}, \code{change}, \code{flagged} (plus method-specific summary columns).
+\item Column \code{flagged} being a logical indicator corresponding to the user-defined threshold.}
 
-If `method = "all_timepoints"`:
-  * one row per subject-time comparison
-  * columns: ID, from_time, to_time, change, flagged
+If \code{method = all_timepoints}:
+\itemize{
+\item One row per subject-time comparison.
+\item Produces multiple rows per subject, comparing each timepoint to the previous one.
+\item For the first timepoint, no previous comparison exists, so \code{NA} is returned by design.
+\item Columns: \code{ID}, \code{from_time}, \code{to_time}, \code{change}, \code{flagged}}
 }
 \description{
-`longflag()` identifies changes in a repeated-measures dataset based on
+\code{longflag()} identifies changes in a repeated-measures dataset based on
 selected methods. The function takes a long-format dataset and evaluates
-whether meaningful change has occurred using one of three approaches:
+whether a meaningful change has occurred using one of three approaches.
 }
 \details{
-* `"first_last"` – change = last value – first value
-* `"mean_change"` – change = mean(value) – first value
-* `"all_timepoints"` – returns a row-wise change between consecutive timepoints
+The meaningful change logic depends on the chosen method:
+
+\itemize{
+  \item \code{first_last}: Change is defined as:
+\deqn{change = \text{last(value)} - \text{first(value)}}
+  \item \code{mean_change}: Mean of all stepwise changes.
+  \item \code{all_timepoints}: Returns a row-wise change between consecutive timepoints.}
 
 
-The change logic depends on the chosen method:
-
-**Method `"first_last"`**
-Produces one row per subject. Change is defined as:
-\deqn{change = last(value) - first(value)}
-
-**Method `"mean_change"`**
-Produces one row per subject. Change is defined as:
-\deqn{change = mean(value) - first(value)}
-
-**Method `"all_timepoints"`**
-Produces multiple rows per subject, comparing each timepoint to the previous one.
-For the first timepoint, no previous comparison exists, so `NA` is returned by design.
-
-A subject or timepoint pair is flagged when the magnitude of change meets or exceeds
-`threshold`.
+A subject or timepoint pair is flagged when the magnitude of change meets or exceeds a user-defined \code{threshold}.
 }
 \examples{
 ## Example dataset
@@ -84,7 +78,7 @@ longflag(
   method = "first_last"
 )
 
-## Example 2: Compare mean value to first value
+## Example 2: Compare mean of consecutive stepwise changes
 longflag(
   data = test_data,
   id = "Person",
