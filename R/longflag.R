@@ -48,14 +48,14 @@
 #' @importFrom stats quantile
 #'
 #' @examples
-#' ## Example dataset
+#' # Example dataset
 #' test_data <- data.frame(
 #'   Person = rep(1:3, each = 3),
 #'   Time = rep(c(1, 2, 3), 3),
 #'   Score = c(10, 12, 15,   20, 20, 22,   5, 5, 5)
 #' )
 #'
-#' ## Example 1: Compare only first and last values
+#' # Example 1: Compare only first and last values
 #' longflag(
 #'   data = test_data,
 #'   id = "Person",
@@ -65,7 +65,7 @@
 #'   method = "first_last"
 #' )
 #'
-#' ## Example 2: Compare mean of consecutive stepwise changes
+#' # Example 2: Compare mean of consecutive stepwise changes
 #' longflag(
 #'   data = test_data,
 #'   id = "Person",
@@ -75,7 +75,7 @@
 #'   method = "mean_change"
 #' )
 #'
-#' ## Example 3: Compare consecutive timepoints
+#' # Example 3: Compare consecutive timepoints
 #' longflag(
 #'   data = test_data,
 #'   id = "Person",
@@ -84,6 +84,7 @@
 #'   threshold = 4,
 #'   method = "all_timepoints"
 #' )
+#'
 
 longflag <- function(data, id, time, value, threshold,
                                  method = c("first_last", "mean_change", "all_timepoints")) {

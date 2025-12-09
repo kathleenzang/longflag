@@ -61,14 +61,14 @@ The meaningful change logic depends on the chosen method:
 A subject or timepoint pair is flagged when the magnitude of change meets or exceeds a user-defined \code{threshold}.
 }
 \examples{
-## Example dataset
+# Example dataset
 test_data <- data.frame(
   Person = rep(1:3, each = 3),
   Time = rep(c(1, 2, 3), 3),
   Score = c(10, 12, 15,   20, 20, 22,   5, 5, 5)
 )
 
-## Example 1: Compare only first and last values
+# Example 1: Compare only first and last values
 longflag(
   data = test_data,
   id = "Person",
@@ -78,7 +78,7 @@ longflag(
   method = "first_last"
 )
 
-## Example 2: Compare mean of consecutive stepwise changes
+# Example 2: Compare mean of consecutive stepwise changes
 longflag(
   data = test_data,
   id = "Person",
@@ -88,7 +88,7 @@ longflag(
   method = "mean_change"
 )
 
-## Example 3: Compare consecutive timepoints
+# Example 3: Compare consecutive timepoints
 longflag(
   data = test_data,
   id = "Person",
@@ -97,4 +97,5 @@ longflag(
   threshold = 4,
   method = "all_timepoints"
 )
+
 }

@@ -1,17 +1,22 @@
 Package: longflag
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Flag meaningful changes across repeated timepoints within subjects
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Kathleen", "Zang",
+      email = "kathleen.zang@mail.utoronto.ca",
       role = c("aut", "cre")
     )
+    person("Isha", "Sharma", email = "mail.isha24@gmail.com", role = c("aut", "cre"))
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: longflag() identifies changes in a repeated-measures dataset based on selected methods. The function takes a long-format dataset and evaluates whether a meaningful change has occurred using one of three approaches.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: dplyr
+Depends: R (>= 3.2)
 RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
