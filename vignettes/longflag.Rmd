@@ -31,7 +31,7 @@ This vignette provides a short, end-to-end example of how to:
 
  - interpret the resulting output and flags.
 
-If the user have not yet installed the package, they can do so with:
+If you have not yet installed the package, you can do so with:
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
@@ -53,7 +53,7 @@ In many longitudinal studies we measure the same variable repeatedly for each su
 
 longflag() helps answer these questions by:
 
- - allowing the user to specify a numeric threshold for what you consider meaningful;
+ - allowing you to specify a numeric threshold for what you consider meaningful;
 
  - offering three different ways to compute change; and
 
@@ -63,7 +63,7 @@ longflag() helps answer these questions by:
 
 longflag() expects data in long format, with one row per subject per timepoint.
 
-The user must provide the names (as character strings) of three variables:
+You must provide the names (as character strings) of three variables:
 
  - id – subject identifier
 
@@ -117,7 +117,7 @@ data("dataset_ex")
 head(dataset_ex)
 ```
 
-We can quickly summarise how many timepoints each subject has:
+We can quickly summarize how many timepoints each subject has:
 
 ```{r}
 dataset_ex %>%
@@ -178,7 +178,7 @@ first_last_res %>%
 filter(flagged)
 ```
 
-The user can adjust the threshold to be more or less stringent. For instance, to see the distribution of absolute changes and choose a quantile-based cutoff:
+You can adjust the threshold to be more or less stringent. For instance, to see the distribution of absolute changes and choose a quantile-based cutoff:
 
 ```{r}
 quantile(abs(first_last_res$change), probs = c(0.5, 0.75, 0.9, 0.95))
@@ -207,7 +207,7 @@ mean_change_res
 
 Here, change is the mean stepwise change and flagged indicates whether its magnitude exceeds the chosen threshold.
 
-This method is useful when the user cares about the average trajectory rather than just the net change between the first and last measurements.
+This method is useful when you care about the average trajectory rather than just the net change between the first and last measurements.
 
 ## Method 3: all consecutive timepoints
 
@@ -219,7 +219,7 @@ data      = dataset_ex,
 id        = "Person",
 time      = "Time",
 value     = "Score",
-threshold = 4,
+threshold = 3,
 method    = "all_timepoints"
 )
 
@@ -238,7 +238,7 @@ The columns are:
 
  - flagged – TRUE if |change| >= threshold
 
-This method is helpful when the user wants to pinpoint exactly when large changes occur. For example, to list only flagged intervals:
+This method is helpful when you want to pinpoint exactly when large changes occur. For example, to list only flagged intervals:
 
 ```{r}
 all_tp_res %>%
@@ -248,23 +248,23 @@ arrange(ID, from_time)
 
 ## Choosing a method
 
-Which method the user uses depends on their scientific question:
+Which method you use depends on your scientific question:
 
- - Use "first_last" when the user is interested in the overall change from baseline (or first observation) to the last available measurement.
+ - Use "first_last" when you are interested in the overall change from baseline (or first observation) to the last available measurement.
 
- - Use "mean_change" when the user wants a summary of the average rate of change over time.
+ - Use "mean_change" when you want a summary of the average rate of change over time.
 
- - Use "all_timepoints" when the user needs to know at which specific intervals substantial changes occurred.
+ - Use "all_timepoints" when you need to know at which specific intervals substantial changes occurred.
 
-In practice, the user might try multiple methods to understand how sensitive their conclusions are to the definition of change.
+In practice, you might try multiple methods to understand how sensitive their conclusions are to the definition of change.
 
 
 ## Further work
 
-This vignette has focused on the basic use of longflag(). In the user's own analyses, they might:
+This vignette has focused on the basic use of longflag(). In your own analyses, you might:
  - Combine longflag() results with additional subject-level information (e.g., treatment group, demographics);
  - Use different thresholds for increases and decreases, by post-processing the change column; or
  - Wrap longflag() calls in their own functions tailored to their study.
 
-We encourage users to explore the function help (?longflag) and adapt the examples shown here to their own longitudinal data.
+We encourage you to explore the function help (?longflag) and adapt the examples shown here to your own longitudinal data.
 

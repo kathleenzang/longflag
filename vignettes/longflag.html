@@ -12,7 +12,7 @@
 
 
 
-<title>Getting started with longflag</title>
+<title>longflag.knit</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -337,10 +337,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Getting started with longflag</h1>
 
 
 
+<table>
+<tbody>
+<tr class="odd">
+<td>title: “Getting started with longflag”</td>
+</tr>
+<tr class="even">
+<td>output: rmarkdown::html_vignette</td>
+</tr>
+<tr class="odd">
+<td>vignette: &gt;</td>
+</tr>
+<tr class="even">
+<td>%</td>
+</tr>
+<tr class="odd">
+<td>%</td>
+</tr>
+<tr class="even">
+<td>%</td>
+</tr>
+</tbody>
+</table>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>longflag is an R package for identifying meaningful changes over time
@@ -353,8 +374,7 @@ using one of three user-selected approaches.</p>
 <li><p>apply the three available methods; and</p></li>
 <li><p>interpret the resulting output and flags.</p></li>
 </ul>
-<p>If the user have not yet installed the package, they can do so
-with:</p>
+<p>If you have not yet installed the package, you can do so with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># library(devtools)</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># devtools::install_github(&quot;kathleenzang/longflag&quot;)</span></span>
@@ -374,8 +394,8 @@ amount?</p></li>
 </ul>
 <p>longflag() helps answer these questions by:</p>
 <ul>
-<li><p>allowing the user to specify a numeric threshold for what you
-consider meaningful;</p></li>
+<li><p>allowing you to specify a numeric threshold for what you consider
+meaningful;</p></li>
 <li><p>offering three different ways to compute change; and</p></li>
 <li><p>returning a tidy tibble with a logical flagged variable.</p></li>
 </ul>
@@ -384,7 +404,7 @@ consider meaningful;</p></li>
 <h2>Data requirements</h2>
 <p>longflag() expects data in long format, with one row per subject per
 timepoint.</p>
-<p>The user must provide the names (as character strings) of three
+<p>You must provide the names (as character strings) of three
 variables:</p>
 <ul>
 <li><p>id – subject identifier</p></li>
@@ -438,7 +458,7 @@ repeated measurements for several subjects.</p>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 4      1    4    14</span></span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 5      1    5    16</span></span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 6      2    1    20</span></span></code></pre></div>
-<p>We can quickly summarise how many timepoints each subject has:</p>
+<p>We can quickly summarize how many timepoints each subject has:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>dataset_ex <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">group_by</span>(Person) <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">summarise</span>(</span>
@@ -516,7 +536,7 @@ change:</p>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 5     7           7         10      3 TRUE   </span></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 6     8          18         22      4 TRUE   </span></span>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 7    10          11         15      4 TRUE</span></span></code></pre></div>
-<p>The user can adjust the threshold to be more or less stringent. For
+<p>You can adjust the threshold to be more or less stringent. For
 instance, to see the distribution of absolute changes and choose a
 quantile-based cutoff:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">quantile</span>(<span class="fu">abs</span>(first_last_res<span class="sc">$</span>change), <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>))</span>
@@ -554,8 +574,8 @@ average for each subject:</p>
 <span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; 10    10   1    FALSE</span></span></code></pre></div>
 <p>Here, change is the mean stepwise change and flagged indicates
 whether its magnitude exceeds the chosen threshold.</p>
-<p>This method is useful when the user cares about the average
-trajectory rather than just the net change between the first and last
+<p>This method is useful when you care about the average trajectory
+rather than just the net change between the first and last
 measurements.</p>
 </div>
 <div id="method-3-all-consecutive-timepoints" class="section level2">
@@ -567,7 +587,7 @@ of consecutive timepoints for each subject:</p>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="at">id        =</span> <span class="st">&quot;Person&quot;</span>,</span>
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="at">time      =</span> <span class="st">&quot;Time&quot;</span>,</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="at">value     =</span> <span class="st">&quot;Score&quot;</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="at">threshold =</span> <span class="dv">4</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="at">threshold =</span> <span class="dv">3</span>,</span>
 <span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="at">method    =</span> <span class="st">&quot;all_timepoints&quot;</span></span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>)</span>
 <span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a></span>
@@ -577,12 +597,12 @@ of consecutive timepoints for each subject:</p>
 <span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt;       ID from_time to_time change flagged</span></span>
 <span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  </span></span>
 <span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;  1     1         1       2      2 FALSE  </span></span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt;  2     1         2       3      3 FALSE  </span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt;  2     1         2       3      3 TRUE   </span></span>
 <span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt;  3     1         3       4     -1 FALSE  </span></span>
 <span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt;  4     1         4       5      2 FALSE  </span></span>
 <span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt;  5     2         1       2      1 FALSE  </span></span>
 <span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt;  6     2         2       3     -1 FALSE  </span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt;  7     2         3       4      3 FALSE  </span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt;  7     2         3       4      3 TRUE   </span></span>
 <span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt;  8     2         4       5      2 FALSE  </span></span>
 <span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt;  9     3         1       2      0 FALSE  </span></span>
 <span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt; 10     3         2       3      1 FALSE</span></span></code></pre></div>
@@ -594,40 +614,43 @@ of consecutive timepoints for each subject:</p>
 <li><p>change – Value(to_time) - Value(from_time)</p></li>
 <li><p>flagged – TRUE if |change| &gt;= threshold</p></li>
 </ul>
-<p>This method is helpful when the user wants to pinpoint exactly when
-large changes occur. For example, to list only flagged intervals:</p>
+<p>This method is helpful when you want to pinpoint exactly when large
+changes occur. For example, to list only flagged intervals:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>all_tp_res <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">filter</span>(flagged) <span class="sc">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">arrange</span>(ID, from_time)</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 0 × 5</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; # Groups:   ID [0]</span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 variables: ID &lt;int&gt;, from_time &lt;dbl&gt;, to_time &lt;dbl&gt;, change &lt;dbl&gt;, flagged &lt;lgl&gt;</span></span></code></pre></div>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 5</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; # Groups:   ID [2]</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;      ID from_time to_time change flagged</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  </span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; 1     1         2       3      3 TRUE   </span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; 2     2         3       4      3 TRUE</span></span></code></pre></div>
 </div>
 <div id="choosing-a-method" class="section level2">
 <h2>Choosing a method</h2>
-<p>Which method the user uses depends on their scientific question:</p>
+<p>Which method you use depends on your scientific question:</p>
 <ul>
-<li><p>Use “first_last” when the user is interested in the overall
-change from baseline (or first observation) to the last available
+<li><p>Use “first_last” when you are interested in the overall change
+from baseline (or first observation) to the last available
 measurement.</p></li>
-<li><p>Use “mean_change” when the user wants a summary of the average
-rate of change over time.</p></li>
-<li><p>Use “all_timepoints” when the user needs to know at which
-specific intervals substantial changes occurred.</p></li>
+<li><p>Use “mean_change” when you want a summary of the average rate of
+change over time.</p></li>
+<li><p>Use “all_timepoints” when you need to know at which specific
+intervals substantial changes occurred.</p></li>
 </ul>
-<p>In practice, the user might try multiple methods to understand how
+<p>In practice, you might try multiple methods to understand how
 sensitive their conclusions are to the definition of change.</p>
 </div>
 <div id="further-work" class="section level2">
 <h2>Further work</h2>
-<p>This vignette has focused on the basic use of longflag(). In the
-user’s own analyses, they might: - Combine longflag() results with
-additional subject-level information (e.g., treatment group,
-demographics); - Use different thresholds for increases and decreases,
-by post-processing the change column; or - Wrap longflag() calls in
-their own functions tailored to their study.</p>
-<p>We encourage users to explore the function help (?longflag) and adapt
-the examples shown here to their own longitudinal data.</p>
+<p>This vignette has focused on the basic use of longflag(). In your own
+analyses, you might: - Combine longflag() results with additional
+subject-level information (e.g., treatment group, demographics); - Use
+different thresholds for increases and decreases, by post-processing the
+change column; or - Wrap longflag() calls in their own functions
+tailored to their study.</p>
+<p>We encourage you to explore the function help (?longflag) and adapt
+the examples shown here to your own longitudinal data.</p>
 </div>
 
 
