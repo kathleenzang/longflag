@@ -42,9 +42,6 @@ The user specifies:
 - `"mean_change"` – mean of stepwise changes between consecutive timepoints.
 - `"all_timepoints"` – change between each pair of consecutive timepoints.
 
-See the package vignette (`vignette("longflag", package = "longflag")`)
-for a worked example of each method.
-
 ---
 
 ## Installation
@@ -154,6 +151,6 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/kathleenzang/lo
 
 The `longflag` package was created by:
 
-- **Kathleen Zang** – <kathleen.zang@mail.utoronto.ca>  
-- **Isha Sharma** – <mail.isha24@gmail.com>  
-This package was developed as part of **CHL5233H: Statistical Programming and Computation for Health Data** at the University of Toronto.
+- Kathleen Zang – <kathleen.zang@mail.utoronto.ca>  
+- Isha Sharma – <mail.isha24@gmail.com>  
+This package was developed as part of CHL5233H: Statistical Programming and Computation for Health Data at the University of Toronto.
