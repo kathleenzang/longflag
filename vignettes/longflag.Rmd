@@ -1,8 +1,8 @@
------
+---
 title: "Getting started with longflag"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{longflag}
+  %\VignetteIndexEntry{Getting started with longflag}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
